@@ -140,6 +140,62 @@ streamlit run app.py or python -m streamlit run app.py
 
 ---
 
+## Step-by-Step Deployment
+
+1. Create a Railway Project
+
+
+Go to railway.app → New Project → Deploy from GitHub
+
+
+2. Deploy FastAPI Backend
+
+
+Select your repo → Railway auto-detects Python
+Settings → Start Command:
+
+
+  uvicorn main:app --host 0.0.0.0 --port $PORT
+
+
+Add PostgreSQL: + New → Database → PostgreSQL
+Variables → New Variable:
+
+
+  DATABASE_URL = ${{Postgres.DATABASE_URL}}
+
+
+Settings → Networking → Generate Domain → copy the URL
+
+
+3. Deploy Streamlit Frontend
+
+
+Same project → + New → GitHub Repo → same repo
+Settings → Start Command:
+
+
+  streamlit run app.py --server.port $PORT --server.address 0.0.0.0
+
+
+Variables → New Variable:
+
+
+  API_URL = https://<your-fastapi-domain>.up.railway.app
+
+
+Settings → Networking → Generate Domain
+
+
+Environment Variables Summary
+
+ServiceVariableValueFastAPIDATABASE_URL${{Postgres.DATABASE_URL}}StreamlitAPI_URLFastAPI public domain URL
+
+
+⚠️ Deploy FastAPI first, get its public URL, then set it as API_URL in the Streamlit service.
+
+---
+
 ## 🗄️ Database Schema
 
 ### `orders`
