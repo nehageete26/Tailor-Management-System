@@ -3,9 +3,7 @@ import requests
 import pandas as pd
 from datetime import date, timedelta
 import json
-
 import os
-
 API = os.getenv("API_URL")
 
 st.set_page_config(
