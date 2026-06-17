@@ -1,9 +1,11 @@
+import os
+from urllib.parse import urlparse
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
 from datetime import date, datetime
 import json
 
@@ -16,16 +18,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# DB_CONFIG = {
+#     "host": "localhost",
+#     "database": "tailor_db",
+#     "user": "postgres",
+#     "password": "password",
+#     "port": 5432
+# }
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+result = urlparse(DATABASE_URL)
+
 DB_CONFIG = {
-    "host": "localhost",
-    "database": "tailor_db",
-    "user": "postgres",
-    "password": "password",
-    "port": 5432
+    "host": result.hostname,
+    "database": result.path[1:],
+    "user": result.username,
+    "password": result.password,
+    "port": result.port
 }
 
 def get_conn():
-    return psycopg2.connect(**DB_CONFIG, cursor_factory=RealDictCursor)
+    return psycopg.connect(
+        host=DB_CONFIG["host"],
+        dbname=DB_CONFIG["database"],
+        user=DB_CONFIG["user"],
+        password=DB_CONFIG["password"],
+        port=DB_CONFIG["port"],
+        row_factory=dict_row
+    )
 
 def init_db():
     conn = get_conn()
