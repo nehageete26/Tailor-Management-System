@@ -194,6 +194,8 @@ ServiceVariableValueFastAPIDATABASE_URL${{Postgres.DATABASE_URL}}StreamlitAPI_UR
 
 ⚠️ Deploy FastAPI first, get its public URL, then set it as API_URL in the Streamlit service.
 
+LINK -> stichtrack.up.railway.app
+
 ---
 
 ## 🗄️ Database Schema
